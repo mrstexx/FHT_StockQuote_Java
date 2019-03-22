@@ -32,6 +32,40 @@ public class Stock implements Serializable {
         }
     }
 
+    public Double[] getSortedCloseData() {
+        Double[] sortedCloseData = new Double[this.getCourseData().size()];
+        for (int i = 0; i < this.getCourseData().size(); i++) {
+            sortedCloseData[i] = this.getCourseData().get(i).getClose();
+        }
+        this.quickSort(sortedCloseData, 0, this.getCourseData().size() - 1);
+        return sortedCloseData;
+    }
+
+    private void quickSort(Double[] data, int startIndex, int endIndex) {
+        if (startIndex < endIndex) {
+            int pi = this.partition(data, startIndex, endIndex);
+            this.quickSort(data, startIndex, pi - 1);
+            this.quickSort(data, pi + 1, endIndex);
+        }
+    }
+
+    private int partition(Double[] array, int startIndex, int endIndex) {
+        double pivot = array[endIndex];
+        int i = startIndex - 1;
+        for (int j = startIndex; j <= endIndex - 1; j++) {
+            if (array[j] > pivot) {
+                i++;
+                double temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+        double temp = array[i + 1];
+        array[i + 1] = array[endIndex];
+        array[endIndex] = temp;
+        return i + 1;
+    }
+
     public String getStockName() {
         return stockName;
     }

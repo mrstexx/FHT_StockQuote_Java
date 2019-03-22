@@ -1,10 +1,15 @@
 import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class IOHandler {
     private HashTable hashTable;
     private String fileName;
+    private DecimalFormat formatter;
+
+    public IOHandler() {
+    }
 
     public IOHandler(HashTable hashTable, String fileName) {
         this.hashTable = hashTable;
@@ -54,11 +59,12 @@ public class IOHandler {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.fileName + ".csv"));
             String line = bufferedReader.readLine();
-            while ((line = bufferedReader.readLine()) != null) {
+            int counter = 0;
+            while ((line = bufferedReader.readLine()) != null && counter < 30) {
                 String[] values = line.split(",");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 CourseData courseData = new CourseData(
-                        sdf.parse(values[0]),
+                        LocalDate.parse(values[0], formatter),
                         Double.parseDouble(values[1]),
                         Double.parseDouble(values[2]),
                         Double.parseDouble(values[3]),
@@ -66,10 +72,50 @@ public class IOHandler {
                         Double.parseDouble(values[5]),
                         Integer.parseInt(values[6]));
                 stock.getCourseData().add(courseData);
+                counter++;
             }
         } catch (IOException e) {
             System.out.println("Die Datei kann nich gefunden werden.");
-        } catch (ParseException e) {
+        }
+    }
+
+    public void drawPlot(Stock stock) {
+        try {
+            FileWriter fileWriter = new FileWriter(new File(stock.getStockName() + ".txt"));
+            DecimalFormat formatter = new DecimalFormat("000.000000");
+            int stockSize = stock.getCourseData().size();
+            Double[] sortedCloseData = stock.getSortedCloseData();
+
+            // writing dates and values
+            for (int i = 0; i < stockSize; i++) {
+                for (int j = 0; j < 6 * stockSize; j++) {
+                    // 5 because of 5 is date length - for 5 places on x axis
+                    if (j == 0) {
+                        fileWriter.write(formatter.format(sortedCloseData[i]) + "|");
+                    } else if (j == 6 * stockSize - 1) {
+                        fileWriter.write("|");
+                    } else if (j % 6 == 2 && sortedCloseData[i] == stock.getCourseData().get(j / 6).getClose()) {
+                        fileWriter.write("+");
+                    } else {
+                        fileWriter.write(" ");
+                    }
+                }
+                fileWriter.write("\n");
+            }
+            // empty space before dates
+            fileWriter.write("          ");
+
+            // writing dates
+            for (int i = 0; i < stockSize; i++) {
+                LocalDate localDate = stock.getCourseData().get(i).getDate();
+                formatter = new DecimalFormat("00");
+                String date = formatter.format(Double.valueOf(localDate.getDayOfMonth())) + "." +
+                        formatter.format(Double.valueOf(localDate.getMonthValue()));
+                fileWriter.write(date + "|");
+            }
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

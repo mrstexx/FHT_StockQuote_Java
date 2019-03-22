@@ -1,8 +1,8 @@
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class CourseData implements Serializable {
-    private Date date;
+    private LocalDate date;
     private double open;
     private double high;
     private double low;
@@ -13,7 +13,7 @@ public class CourseData implements Serializable {
     public CourseData() {
     }
 
-    public CourseData(Date date, double open, double high, double low, double close, double adjClose, int volume) {
+    public CourseData(LocalDate date, double open, double high, double low, double close, double adjClose, int volume) {
         this.date = date;
         this.open = open;
         this.high = high;
@@ -23,11 +23,11 @@ public class CourseData implements Serializable {
         this.volume = volume;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

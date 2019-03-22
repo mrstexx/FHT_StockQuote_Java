@@ -14,7 +14,6 @@ public class MainMenu {
         System.out.println("*************************************");
         System.out.println("| Willkommen zur Aktienkurs Manager |");
         System.out.println("*************************************");
-        System.out.println();
     }
 
     private void printMainMenu() {
@@ -113,8 +112,13 @@ public class MainMenu {
     }
 
     private void plotStockQuote() {
-        // temp
-        this.hashTable.printList();
+        String stockName = "";
+        Scanner reader = new Scanner(System.in);
+        System.out.print("Geben sie Aktiensname ein: ");
+        stockName = reader.nextLine();
+        Stock stock = this.hashTable.getStock(stockName);
+        IOHandler io = new IOHandler();
+        io.drawPlot(stock);
     }
 
     private void saveHashTable() {
