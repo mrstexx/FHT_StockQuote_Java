@@ -39,11 +39,10 @@ public class MainMenu {
                 userInput = reader.nextLine();
                 menuOption = Integer.parseInt(userInput);
                 if (menuOption < EMenuOptions.ADD.getNumValue() || menuOption > EMenuOptions.QUIT.getNumValue()) {
-                    System.out.println("Falsche Eingabe! Versuchen Sie wieder.");
+                    System.out.println("**Falsche Eingabe! Versuchen Sie wieder.");
                 }
             } catch (Exception c) {
-                System.out.println("Falsche Eingabe! Eingabe muss ein Integer sein! Versuchen Sie wieder.");
-                //reader.remove();
+                System.out.println("**Falsche Eingabe! Eingabe muss ein Integer sein! Versuchen Sie wieder.");
             }
             if (menuOption == EMenuOptions.ADD.getNumValue()) {
                 addNewStock();
@@ -70,11 +69,11 @@ public class MainMenu {
         String stockName = "";
         String WKN = "";
         String stockShortcut = "";
-        System.out.print("Aktionsname: ");
+        System.out.print("Aktiensname: ");
         stockName = reader.nextLine();
         System.out.print("WKN: ");
         WKN = reader.nextLine();
-        System.out.print("Aktionskuerzel: ");
+        System.out.print("Aktienskuerzel: ");
         stockShortcut = reader.nextLine();
         Stock newStock = new Stock(stockName, WKN, stockShortcut);
         this.hashTable.add(newStock);
@@ -83,48 +82,60 @@ public class MainMenu {
     private void deleteStock() {
         Scanner reader = new Scanner(System.in);
         String stockName = "";
-        System.out.print("Aktionsname: ");
+        System.out.print("Zu löschender Aktiensname/kuerzel: ");
         stockName = reader.nextLine();
-        this.hashTable.remove(stockName);
+        if (this.hashTable.search(stockName, false)) {
+            this.hashTable.remove(stockName);
+            return;
+        }
+        System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }
 
     private void importStockQuote() {
         Scanner reader = new Scanner(System.in);
         String stockName = "";
         String courseFileName = "";
-        System.out.print("Geben Sie Aktiensname ein: ");
+        System.out.print("Kursdaten importieren in (Aktiensname/kuerzel): ");
         stockName = reader.nextLine();
-        System.out.print("Geben Sie Aktienskurse Dateiname ein: ");
+        System.out.print("Geben Sie Dateiname mit Kursendata ein (ohne .csv): ");
         courseFileName = reader.nextLine();
-        Stock stock = this.hashTable.getStock(stockName);
-        IOHandler io = new IOHandler(courseFileName);
-        io.importCourseData(stock);
+        if (this.hashTable.search(stockName, false)) {
+            Stock stock = this.hashTable.getStock(stockName);
+            IOHandler io = new IOHandler(courseFileName);
+            io.importCourseData(stock);
+            return;
+        }
+        System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }
 
     private void searchStock() {
         Scanner reader = new Scanner(System.in);
         String stockName = "";
-        System.out.print("Aktiensname: ");
+        System.out.print("Aktiensname/kuerzel: ");
         stockName = reader.nextLine();
-        if (!this.hashTable.search(stockName)) {
-            System.out.println("Eingegeben Name/WKN existiert nicht.");
+        if (!this.hashTable.search(stockName, true)) {
+            System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
         }
     }
 
     private void plotStockQuote() {
         String stockName = "";
         Scanner reader = new Scanner(System.in);
-        System.out.print("Geben sie Aktiensname ein: ");
+        System.out.print("Geben sie Aktiensname/kuerzel ein: ");
         stockName = reader.nextLine();
-        Stock stock = this.hashTable.getStock(stockName);
-        IOHandler io = new IOHandler();
-        io.drawPlot(stock);
+        if (this.hashTable.search(stockName, false)) {
+            Stock stock = this.hashTable.getStock(stockName);
+            IOHandler io = new IOHandler();
+            io.drawPlot(stock);
+            return;
+        }
+        System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }
 
     private void saveHashTable() {
         String fileName = "";
         Scanner reader = new Scanner(System.in);
-        System.out.print("Geben Sie Datei Name ein: ");
+        System.out.print("Geben Sie gewünschter Dateiname ein (ohne Dateiextension): ");
         fileName = reader.nextLine();
         IOHandler io = new IOHandler(this.hashTable, fileName);
         io.saveHashTable();
@@ -133,7 +144,7 @@ public class MainMenu {
     private void loadHashTable() {
         String fileName = "";
         Scanner reader = new Scanner(System.in);
-        System.out.print("Geben Sie Datei Name ein: ");
+        System.out.print("Geben Sie gespeicherte Dateiname ein (ohne Dateiextension): ");
         fileName = reader.nextLine();
         IOHandler io = new IOHandler(fileName);
         this.hashTable = io.loadHashTable();

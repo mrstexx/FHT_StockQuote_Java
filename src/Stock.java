@@ -18,7 +18,7 @@ public class Stock implements Serializable {
 
     public void listCourseData() {
         if (this.courseData.size() == 0) {
-            System.out.println("Es gibt keine gespeicherte Aktienskursdaten.");
+            System.out.println("**Es gibt keine gespeicherte Aktienskursdaten.");
             return;
         }
         for (CourseData courseData : this.courseData) {

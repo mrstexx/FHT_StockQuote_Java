@@ -31,19 +31,26 @@ public class HashTable implements Serializable {
         }
     }
 
-    public boolean search(String name) {
+    public boolean search(String name, boolean toPrintList) {
         int i = 0;
+        // TODO break loop if first not exist (after correction implementation)
         while (i < CAPACITY) {
             int hash = (int) (generateHashCode(name) + Math.pow(i + 1, 2)) % CAPACITY;
             if (this.stocks[hash] != null) {
                 if (this.stocks[hash].getStockName().equals(name)) {
-                    stocks[hash].listCourseData();
+                    if (toPrintList == true) {
+                        stocks[hash].listCourseData();
+                    }
                     return true;
                 }
             }
             i++;
         }
         return false;
+    }
+
+    public void getSearchResults () {
+
     }
 
     public Stock getStock(String name) {

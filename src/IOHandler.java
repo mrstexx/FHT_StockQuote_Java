@@ -27,9 +27,9 @@ public class IOHandler {
             objectOutputStream.writeObject(this.hashTable);
             fileOutputStream.close();
             objectOutputStream.close();
+            System.out.println("**Die HashTable wird erfolgreich gespeichert.");
         } catch (IOException e) {
-            //System.out.println("Die Datei kann nicht gefunden werden.");
-            e.printStackTrace();
+            System.out.println("**Ausgabe Fehler wurde gefunden. Versuchen Sie mit andere Dateiname!");
         }
     }
 
@@ -41,10 +41,11 @@ public class IOHandler {
             hashTable = (HashTable) objectInputStream.readObject();
             fileInputStream.close();
             objectInputStream.close();
+            System.out.println("**Die HashTable wird erfolgreich eingelesen.");
         } catch (IOException e) {
-            System.out.println("Die Datei kann nicht gefunden werden.");
+            System.out.println("**Die eingegebene Datei kann nicht gefunden werden.");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("**Die gespeicherte Tabelle stimmt nicht mit Ihren Einstellungen ueberein.");
         }
         return hashTable;
     }
@@ -74,8 +75,10 @@ public class IOHandler {
                 stock.getCourseData().add(courseData);
                 counter++;
             }
+            bufferedReader.close();
+            System.out.println("**Die Kursdaten werden erfolgreich importiert.");
         } catch (IOException e) {
-            System.out.println("Die Datei kann nich gefunden werden.");
+            System.out.println("**Die Datei kann nich gefunden werden.");
         }
     }
 
@@ -115,8 +118,9 @@ public class IOHandler {
             }
             fileWriter.flush();
             fileWriter.close();
+            System.out.println("**Der Graph wird erfolgreich gespeichert.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("**Ausgabe Fehler wurde gefunden. Versuchen Sie mit andere Name!");
         }
     }
 }
