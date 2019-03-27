@@ -7,15 +7,15 @@ public class Stock implements Serializable {
     private String stockShortcut = "";
     private ArrayList<CourseData> courseData = new ArrayList<>();
 
-    public Stock() {
-    }
-
     public Stock(String stockName, String WKN, String stockShortcut) {
         this.stockName = stockName;
         this.WKN = WKN;
         this.stockShortcut = stockShortcut;
     }
 
+    /**
+     * Function used to list all course data on searching
+     */
     public void listCourseData() {
         if (this.courseData.size() == 0) {
             System.out.println("**Es gibt keine gespeicherte Aktienskursdaten.");
@@ -32,6 +32,10 @@ public class Stock implements Serializable {
         }
     }
 
+    /**
+     * Function used for sorting close data of one stock
+     * @return sortedCloseData Returns sorted close data
+     */
     public Double[] getSortedCloseData() {
         Double[] sortedCloseData = new Double[this.getCourseData().size()];
         for (int i = 0; i < this.getCourseData().size(); i++) {
@@ -53,6 +57,7 @@ public class Stock implements Serializable {
         double pivot = array[endIndex];
         int i = startIndex - 1;
         for (int j = startIndex; j <= endIndex - 1; j++) {
+            // sort max->min
             if (array[j] > pivot) {
                 i++;
                 double temp = array[i];
@@ -63,7 +68,7 @@ public class Stock implements Serializable {
         double temp = array[i + 1];
         array[i + 1] = array[endIndex];
         array[endIndex] = temp;
-        return i + 1;
+        return (i + 1);
     }
 
     public String getStockName() {

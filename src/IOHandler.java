@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 public class IOHandler {
     private HashTable hashTable;
     private String fileName;
-    private DecimalFormat formatter;
 
     public IOHandler() {
     }
@@ -20,6 +19,9 @@ public class IOHandler {
         this.fileName = fileName;
     }
 
+    /**
+     * Function used to save HashTable as binary object using ObjectOutputStream (Serialisation)
+     */
     public void saveHashTable() {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(this.fileName + ".bin");
@@ -33,6 +35,11 @@ public class IOHandler {
         }
     }
 
+    /**
+     * Function used to load binary file (Object) using ObjectInputStream (Deserialisation)
+     *
+     * @return Returns new HashTable as new object
+     */
     public HashTable loadHashTable() {
         HashTable hashTable = null;
         try {
@@ -50,28 +57,27 @@ public class IOHandler {
         return hashTable;
     }
 
+    /**
+     * Function used for importing course data in one stock from hashtable
+     *
+     * @param stock Stock to be imported course data in
+     */
     public void importCourseData(Stock stock) {
-        String open = "";
-        String high = "";
-        String low = "";
-        String close = "";
-        String adjClose = "";
-        String volume = "";
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.fileName + ".csv"));
-            String line = bufferedReader.readLine();
+            String line = "";
             int counter = 0;
             while ((line = bufferedReader.readLine()) != null && counter < 30) {
                 String[] values = line.split(",");
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 CourseData courseData = new CourseData(
-                        LocalDate.parse(values[0], formatter),
-                        Double.parseDouble(values[1]),
-                        Double.parseDouble(values[2]),
-                        Double.parseDouble(values[3]),
-                        Double.parseDouble(values[4]),
-                        Double.parseDouble(values[5]),
-                        Integer.parseInt(values[6]));
+                        LocalDate.parse(values[0], formatter), // date
+                        Double.parseDouble(values[1]), // open data
+                        Double.parseDouble(values[2]), // high data
+                        Double.parseDouble(values[3]), // low data
+                        Double.parseDouble(values[4]), // close data
+                        Double.parseDouble(values[5]), // adjClose data
+                        Integer.parseInt(values[6])); // volume data
                 stock.getCourseData().add(courseData);
                 counter++;
             }
@@ -82,17 +88,24 @@ public class IOHandler {
         }
     }
 
+    /**
+     * Function used for writing (output) of close data of one stock from hashtable
+     *
+     * @param stock Stock from which is new graph image (.txt) created of close data
+     */
     public void drawPlot(Stock stock) {
         try {
+            // Output as .txt file
             FileWriter fileWriter = new FileWriter(new File(stock.getStockName() + ".txt"));
             DecimalFormat formatter = new DecimalFormat("000.000000");
             int stockSize = stock.getCourseData().size();
+            // sort close data and get it as new double array in order to show sorted values on y-axis
             Double[] sortedCloseData = stock.getSortedCloseData();
 
-            // writing dates and values
+            // writing dates and values on the graph
             for (int i = 0; i < stockSize; i++) {
                 for (int j = 0; j < 6 * stockSize; j++) {
-                    // 5 because of 5 is date length - for 5 places on x axis
+                    // 6 times because 5 is date length (DD.MM) - for 5 places on x-axis + 1 for '|'
                     if (j == 0) {
                         fileWriter.write(formatter.format(sortedCloseData[i]) + "|");
                     } else if (j == 6 * stockSize - 1) {
@@ -105,10 +118,10 @@ public class IOHandler {
                 }
                 fileWriter.write("\n");
             }
-            // empty space before dates
-            fileWriter.write("          ");
 
-            // writing dates
+            // empty space before dates at the bottom
+            fileWriter.write("          ");
+            // writing dates at the bottom
             for (int i = 0; i < stockSize; i++) {
                 LocalDate localDate = stock.getCourseData().get(i).getDate();
                 formatter = new DecimalFormat("00");
@@ -120,7 +133,7 @@ public class IOHandler {
             fileWriter.close();
             System.out.println("**Der Graph wird erfolgreich gespeichert.");
         } catch (IOException e) {
-            System.out.println("**Ausgabe Fehler wurde gefunden. Versuchen Sie mit andere Name!");
+            System.out.println("**Ausgabe Fehler wurde gefunden. Versuchen Sie mit anderem Name!");
         }
     }
 }

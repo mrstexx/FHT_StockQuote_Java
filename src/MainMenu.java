@@ -2,9 +2,11 @@ import java.util.Scanner;
 
 public class MainMenu {
     private HashTable hashTable;
+    private Scanner reader;
 
     public MainMenu() {
         this.hashTable = new HashTable();
+        this.reader = new Scanner(System.in);
         printMainMenuHeader();
         printMainMenu();
         inputHandler();
@@ -32,12 +34,12 @@ public class MainMenu {
     private void inputHandler() {
         String userInput = "";
         int menuOption = 0;
-        Scanner reader = new Scanner(System.in);
         while (menuOption != EMenuOptions.QUIT.getNumValue()) {
             System.out.print("Benutzer Eingabe (Nummer): ");
             try {
-                userInput = reader.nextLine();
+                userInput = this.reader.nextLine();
                 menuOption = Integer.parseInt(userInput);
+                // input cannot be smaller than 1 and bigger than 8
                 if (menuOption < EMenuOptions.ADD.getNumValue() || menuOption > EMenuOptions.QUIT.getNumValue()) {
                     System.out.println("**Falsche Eingabe! Versuchen Sie wieder.");
                 }
@@ -65,25 +67,23 @@ public class MainMenu {
     }
 
     private void addNewStock() {
-        Scanner reader = new Scanner(System.in);
         String stockName = "";
         String WKN = "";
         String stockShortcut = "";
         System.out.print("Aktiensname: ");
-        stockName = reader.nextLine();
+        stockName = this.reader.nextLine();
         System.out.print("WKN: ");
-        WKN = reader.nextLine();
+        WKN = this.reader.nextLine();
         System.out.print("Aktienskuerzel: ");
-        stockShortcut = reader.nextLine();
+        stockShortcut = this.reader.nextLine();
         Stock newStock = new Stock(stockName, WKN, stockShortcut);
         this.hashTable.add(newStock);
     }
 
     private void deleteStock() {
-        Scanner reader = new Scanner(System.in);
         String stockName = "";
         System.out.print("Zu löschender Aktiensname/kuerzel: ");
-        stockName = reader.nextLine();
+        stockName = this.reader.nextLine();
         if (this.hashTable.search(stockName, false)) {
             this.hashTable.remove(stockName);
             return;
@@ -92,13 +92,12 @@ public class MainMenu {
     }
 
     private void importStockQuote() {
-        Scanner reader = new Scanner(System.in);
         String stockName = "";
         String courseFileName = "";
         System.out.print("Kursdaten importieren in (Aktiensname/kuerzel): ");
-        stockName = reader.nextLine();
+        stockName = this.reader.nextLine();
         System.out.print("Geben Sie Dateiname mit Kursendata ein (ohne .csv): ");
-        courseFileName = reader.nextLine();
+        courseFileName = this.reader.nextLine();
         if (this.hashTable.search(stockName, false)) {
             Stock stock = this.hashTable.getStock(stockName);
             IOHandler io = new IOHandler(courseFileName);
@@ -109,10 +108,9 @@ public class MainMenu {
     }
 
     private void searchStock() {
-        Scanner reader = new Scanner(System.in);
         String stockName = "";
         System.out.print("Aktiensname/kuerzel: ");
-        stockName = reader.nextLine();
+        stockName = this.reader.nextLine();
         if (!this.hashTable.search(stockName, true)) {
             System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
         }
@@ -120,9 +118,8 @@ public class MainMenu {
 
     private void plotStockQuote() {
         String stockName = "";
-        Scanner reader = new Scanner(System.in);
         System.out.print("Geben sie Aktiensname/kuerzel ein: ");
-        stockName = reader.nextLine();
+        stockName = this.reader.nextLine();
         if (this.hashTable.search(stockName, false)) {
             Stock stock = this.hashTable.getStock(stockName);
             IOHandler io = new IOHandler();
@@ -134,18 +131,16 @@ public class MainMenu {
 
     private void saveHashTable() {
         String fileName = "";
-        Scanner reader = new Scanner(System.in);
         System.out.print("Geben Sie gewünschter Dateiname ein (ohne Dateiextension): ");
-        fileName = reader.nextLine();
+        fileName = this.reader.nextLine();
         IOHandler io = new IOHandler(this.hashTable, fileName);
         io.saveHashTable();
     }
 
     private void loadHashTable() {
         String fileName = "";
-        Scanner reader = new Scanner(System.in);
         System.out.print("Geben Sie gespeicherte Dateiname ein (ohne Dateiextension): ");
-        fileName = reader.nextLine();
+        fileName = this.reader.nextLine();
         IOHandler io = new IOHandler(fileName);
         this.hashTable = io.loadHashTable();
     }

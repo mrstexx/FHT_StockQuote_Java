@@ -9,6 +9,7 @@ public class HashTable implements Serializable {
     }
 
     public void add(Stock stock) {
+        // TODO implement not more space
         int i = 1;
         int hash = (int) (generateHashCode(stock.getStockName()) + Math.pow(i, 2)) % CAPACITY;
         while (this.stocks[hash] != null) {
@@ -20,6 +21,7 @@ public class HashTable implements Serializable {
 
     public void remove(String name) {
         int i = 0;
+        // TODO instead of capacity, use number of added stocks
         while (i < CAPACITY) {
             int hash = (int) (generateHashCode(name) + Math.pow(i + 1, 2)) % CAPACITY;
             if (this.stocks[hash] != null) {
@@ -49,27 +51,16 @@ public class HashTable implements Serializable {
         return false;
     }
 
-    public void getSearchResults () {
-
-    }
-
     public Stock getStock(String name) {
         int hash = generateHashCode(name) + 1;
         return this.stocks[hash];
     }
 
-    // temp
-    public void printList() {
-        for (int i = 0; i < this.stocks.length; i++) {
-            if (this.stocks[i] != null) {
-                System.out.println(this.stocks[i].getStockName());
-            }
-        }
-    }
-
     private int generateHashCode(String name) {
         int hash = 0;
         int hashBase = 31;
+        // TODO +1, -1, +4, -4, ... https://de.wikipedia.org/wiki/Hashtabelle#Quadratisches_Sondieren
+        // TODO Do magic for name and shorcut in one hash function
         for (int i = 0; i < name.length(); i++) {
             hash = hash * hashBase + name.charAt(i);
         }

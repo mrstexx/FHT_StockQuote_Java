@@ -8,10 +8,7 @@ public class CourseData implements Serializable {
     private double low;
     private double close;
     private double adjClose;
-    int volume;
-
-    public CourseData() {
-    }
+    private int volume;
 
     public CourseData(LocalDate date, double open, double high, double low, double close, double adjClose, int volume) {
         this.date = date;
