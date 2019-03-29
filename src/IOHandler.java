@@ -51,6 +51,7 @@ public class IOHandler {
             System.out.println("**Die HashTable wird erfolgreich eingelesen.");
         } catch (IOException e) {
             System.out.println("**Die eingegebene Datei kann nicht gefunden werden.");
+            return new HashTable();
         } catch (ClassNotFoundException e) {
             System.out.println("**Die gespeicherte Tabelle stimmt nicht mit Ihren Einstellungen ueberein.");
         }
@@ -65,7 +66,7 @@ public class IOHandler {
     public void importCourseData(Stock stock) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.fileName + ".csv"));
-            String line = "";
+            String line = bufferedReader.readLine(); // empty first line
             int counter = 0;
             while ((line = bufferedReader.readLine()) != null && counter < 30) {
                 String[] values = line.split(",");
