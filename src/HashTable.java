@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 public class HashTable implements Serializable {
-    public static final int CAPACITY = 1000;
+    public static final int CAPACITY = 2003; // in form 4*j + 3
     private int currentNumberOfStocks = 0;
     private Stock[] stocks;
 
@@ -15,19 +15,33 @@ public class HashTable implements Serializable {
      * @param stock New stock to be added in hashtable
      */
     public void add(Stock stock) {
-        if (this.currentNumberOfStocks != CAPACITY) {
-            int i = 1;
-            int hash = (int) (generateHashCode(stock.getStockName()) + Math.pow(i, 2)) % CAPACITY;
-            while (this.stocks[hash] != null) {
-                i++;
-                hash = (int) (generateHashCode(stock.getStockName()) + Math.pow(i, 2)) % CAPACITY;
-            }
-            this.stocks[hash] = stock;
-            this.currentNumberOfStocks++;
+        // first check is same object already saved
+        if (strictSearch(stock)) {
+            System.out.println("**Diese Aktie existiert schon im Table!");
             return;
         }
-        System.out.println("**Es gibt nicht genug frei Plaetze.");
+        int hash = (int) generateHashCode(stock.getStockName());
+        if (this.stocks[hash] == null) {
+            this.stocks[hash] = stock;
+            return;
+        }
+        int i = 1;
+        while (i < (CAPACITY - 1) / 2) { // 2002 / 2 = 1001 -> which is exactly 1000 times to handle one action if required
+            hash = (int) (generateHashCode(stock.getStockName()) +
+                    Math.pow(-1, i + 1) * Math.pow(Math.round((double) i / 2), 2)) % CAPACITY; // alternating quadratic probing
+            if (hash < 0) {
+                hash += CAPACITY; // avoid negative hash numbers
+            }
+            if (this.stocks[hash] == null) {
+                this.stocks[hash] = stock;
+                return;
+            }
+            i++;
+        }
+        this.currentNumberOfStocks++;
+        return;
     }
+
 
     /**
      * Remove stock from hashtable
@@ -59,7 +73,7 @@ public class HashTable implements Serializable {
      */
     public boolean search(String name, boolean toPrintList) {
         int i = 0;
-        // TODO break loop if first not exist (after correction implementation)
+        // TODO DO REFACTORING
         while (i < CAPACITY) {
             int hash = (int) (generateHashCode(name) + Math.pow(i + 1, 2)) % CAPACITY;
             if (this.stocks[hash] != null) {
@@ -76,13 +90,37 @@ public class HashTable implements Serializable {
     }
 
     /**
+     * Function used to check are two objects same
+     *
+     * @param stock Stock to be compared
+     * @return True if newly created stock is equal to existing one in database.
+     */
+    private boolean strictSearch(Stock stock) {
+        int i = 0;
+        // TODO DO REFACTORING
+        while (i < CAPACITY) {
+            int hash = (int) (generateHashCode(stock.getStockName()) + Math.pow(i + 1, 2)) % CAPACITY;
+            if (this.stocks[hash] != null) {
+                if (this.stocks[hash].getStockName().equals(stock.getStockName()) &&
+                        this.stocks[hash].getStockShortcut().equals(stock.getStockShortcut()) &&
+                        this.stocks[hash].getWKN().equals(stock.getWKN())) {
+                    return true;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    /**
      * Function used to get stock from hashtable
      *
      * @param name Name/Shortcut for wanted stock
      * @return Stock from hashtable
      */
     public Stock getStock(String name) {
-        int hash = generateHashCode(name) + 1;
+        // TODO also could happen that does not work every time becuase of probing - also search for name and shortcut
+        int hash = generateHashCode(name);
         return this.stocks[hash];
     }
 
@@ -95,14 +133,13 @@ public class HashTable implements Serializable {
     private int generateHashCode(String name) {
         int hash = 0;
         int hashBase = 31;
-        // TODO +1, -1, +4, -4, ... https://de.wikipedia.org/wiki/Hashtabelle#Quadratisches_Sondieren
         // TODO Do magic for name and shorcut in one hash function
         for (int i = 0; i < name.length(); i++) {
             hash = hash * hashBase + name.charAt(i);
         }
         hash %= CAPACITY;
         if (hash < 0) {
-            hash += CAPACITY;
+            hash += CAPACITY; // in case that hash is negative number
         }
         return hash;
     }

@@ -45,6 +45,7 @@ public class MainMenu {
                 }
             } catch (Exception c) {
                 System.out.println("**Falsche Eingabe! Eingabe muss ein Integer sein! Versuchen Sie wieder.");
+                continue;
             }
             if (menuOption == EMenuOptions.ADD.getNumValue()) {
                 addNewStock();
@@ -100,9 +101,11 @@ public class MainMenu {
         courseFileName = this.reader.nextLine();
         if (this.hashTable.search(stockName, false)) {
             Stock stock = this.hashTable.getStock(stockName);
-            IOHandler io = new IOHandler(courseFileName);
-            io.importCourseData(stock);
-            return;
+            if (stock != null) {
+                IOHandler io = new IOHandler(courseFileName);
+                io.importCourseData(stock);
+                return;
+            }
         }
         System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }
@@ -122,9 +125,11 @@ public class MainMenu {
         stockName = this.reader.nextLine();
         if (this.hashTable.search(stockName, false)) {
             Stock stock = this.hashTable.getStock(stockName);
-            IOHandler io = new IOHandler();
-            io.drawPlot(stock);
-            return;
+            if (stock != null) {
+                IOHandler io = new IOHandler();
+                io.drawPlot(stock);
+                return;
+            }
         }
         System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }

@@ -5,12 +5,13 @@ public class Stock implements Serializable {
     private String stockName = "";
     private String WKN = "";
     private String stockShortcut = "";
-    private ArrayList<CourseData> courseData = new ArrayList<>();
+    private ArrayList<CourseData> courseData;
 
     public Stock(String stockName, String WKN, String stockShortcut) {
         this.stockName = stockName;
         this.WKN = WKN;
         this.stockShortcut = stockShortcut;
+        this.courseData = new ArrayList<>();
     }
 
     /**

@@ -2,6 +2,7 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 public class IOHandler {
     private HashTable hashTable;
@@ -64,11 +65,19 @@ public class IOHandler {
      * @param stock Stock to be imported course data in
      */
     public void importCourseData(Stock stock) {
+        if (!stock.getCourseData().isEmpty()) {
+            Scanner reader = new Scanner(System.in);
+            System.out.println("Wollen Sie existierte Kursdaten ueberschreiben (y/n): ");
+            String userInput = reader.next();
+            if (userInput.equalsIgnoreCase("n")) {
+                return;
+            }
+        }
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.fileName + ".csv"));
             String line = bufferedReader.readLine(); // empty first line
             int counter = 0;
-            while ((line = bufferedReader.readLine()) != null && counter < 30) {
+            while ((line = bufferedReader.readLine()) != null && counter < 30) { // read only last 30 days
                 String[] values = line.split(",");
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 CourseData courseData = new CourseData(
