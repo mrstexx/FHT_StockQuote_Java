@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 public class HashTable implements Serializable {
-    public static final int CAPACITY = 1003; // in form 4*j + 3
+    public static final int CAPACITY = 2003; // in form 4*j + 3 - alpha with quadratic probing is about 50%
     private int currentNumberOfStocks = 0;
     private Stock[] stocks;
     private Stock[] stocksShortcut;
@@ -50,7 +50,7 @@ public class HashTable implements Serializable {
             return;
         }
         int i = 1;
-        while (i < CAPACITY) {  // it can 1002 times loop
+        while (i < CAPACITY) {
             hash = isName ? (int) (generateHashCode(stock.getStockName()) +
                     Math.pow(-1, i + 1) * Math.pow(Math.round((double) i / 2), 2)) % CAPACITY :
                     (int) (generateHashCode(stock.getStockName()) +
@@ -135,7 +135,7 @@ public class HashTable implements Serializable {
      * @return True if newly created stock is equal to existing one in database. False if newly created stock can be created
      */
     private boolean strictSearch(Stock stock) {
-        if (search(stock.getStockName(), false) != null && search(stock.getStockShortcut(), false) != null) {
+        if (search(stock.getStockName(), false) != null || search(stock.getStockShortcut(), false) != null) {
             // it is possible to create stock if name or shortcut is different than existing one in hashtable
             return true;
         }
@@ -165,11 +165,10 @@ public class HashTable implements Serializable {
         int hash = 0;
         int hashBase = 31;
         for (int i = 0; i < name.length(); i++) {
-            hash = hash * hashBase + name.charAt(i);
+            hash = (hash * hashBase + name.charAt(i)) % CAPACITY;
         }
-        hash %= CAPACITY;
         if (hash < 0) {
-            hash += CAPACITY; // in case that hash is negative number
+            hash += CAPACITY; // in case that hash is negative value
         }
         return hash;
     }
