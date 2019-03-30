@@ -87,7 +87,7 @@ public class MainMenu {
         stockName = this.reader.nextLine();
         Stock stock = this.hashTable.search(stockName, false);
         if (stock != null) {
-            this.hashTable.remove(stockName);
+            this.hashTable.remove(stock);
             return;
         }
         System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");

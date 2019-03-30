@@ -145,20 +145,13 @@ public class HashTable implements Serializable {
     /**
      * Remove stock from hashtable
      *
-     * @param name Stock Name/Shortcut to be deleted
+     * @param stockToDelete Stock to be deleted
      */
-    public void remove(String name) {
-        int i = 0;
-        // TODO instead of capacity, use number of added stocks
-        while (i < CAPACITY) {
-            int hash = (int) (generateHashCode(name) + Math.pow(i + 1, 2)) % CAPACITY;
-            if (this.stocks[hash] != null) {
-                if (this.stocks[hash].getStockName().equals(name)) {
-                    this.stocks[hash] = null;
-                    break;
-                }
-            }
-        }
+    public void remove(Stock stockToDelete) {
+        // remove from name array
+        this.stocks[stockToDelete.getNameHash()] = null;
+        // remove from shortcut array
+        this.stocksShortcut[stockToDelete.getShortcutHash()] = null;
         this.currentNumberOfStocks--;
     }
 
