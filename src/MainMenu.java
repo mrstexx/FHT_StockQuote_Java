@@ -85,7 +85,8 @@ public class MainMenu {
         String stockName = "";
         System.out.print("Zu löschender Aktiensname/kuerzel: ");
         stockName = this.reader.nextLine();
-        if (this.hashTable.search(stockName, false)) {
+        Stock stock = this.hashTable.search(stockName, false);
+        if (stock != null) {
             this.hashTable.remove(stockName);
             return;
         }
@@ -99,13 +100,11 @@ public class MainMenu {
         stockName = this.reader.nextLine();
         System.out.print("Geben Sie Dateiname mit Kursendata ein (ohne .csv): ");
         courseFileName = this.reader.nextLine();
-        if (this.hashTable.search(stockName, false)) {
-            Stock stock = this.hashTable.getStock(stockName);
-            if (stock != null) {
-                IOHandler io = new IOHandler(courseFileName);
-                io.importCourseData(stock);
-                return;
-            }
+        Stock stock = this.hashTable.search(stockName, false);
+        if (stock != null) {
+            IOHandler io = new IOHandler(courseFileName);
+            io.importCourseData(stock);
+            return;
         }
         System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }
@@ -114,7 +113,8 @@ public class MainMenu {
         String stockName = "";
         System.out.print("Aktiensname/kuerzel: ");
         stockName = this.reader.nextLine();
-        if (!this.hashTable.search(stockName, true)) {
+        Stock stock = this.hashTable.search(stockName, true);
+        if (stock == null) {
             System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
         }
     }
@@ -123,13 +123,11 @@ public class MainMenu {
         String stockName = "";
         System.out.print("Geben sie Aktiensname/kuerzel ein: ");
         stockName = this.reader.nextLine();
-        if (this.hashTable.search(stockName, false)) {
-            Stock stock = this.hashTable.getStock(stockName);
-            if (stock != null) {
-                IOHandler io = new IOHandler();
-                io.drawPlot(stock);
-                return;
-            }
+        Stock stock = this.hashTable.search(stockName, false);
+        if (stock != null) {
+            IOHandler io = new IOHandler();
+            io.drawPlot(stock);
+            return;
         }
         System.out.println("**Aktien mit eingegebenem Name/Kuerzel kann nicht gefunden werden.");
     }

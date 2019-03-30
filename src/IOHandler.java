@@ -77,7 +77,7 @@ public class IOHandler {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.fileName + ".csv"));
             String line = bufferedReader.readLine(); // empty first line
             int counter = 0;
-            while ((line = bufferedReader.readLine()) != null && counter < 30) { // read only last 30 days
+            while ((line = bufferedReader.readLine()) != null && counter < stock.MAX_COURSE_DATA) { // read only last 30 days
                 String[] values = line.split(",");
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 CourseData courseData = new CourseData(

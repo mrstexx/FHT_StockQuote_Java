@@ -7,6 +7,12 @@ public class Stock implements Serializable {
     private String stockShortcut = "";
     private ArrayList<CourseData> courseData;
 
+    // helping data for hashing
+    private int nameHash;
+    private int shortcutHash;
+
+    public static final int MAX_COURSE_DATA = 30;
+
     public Stock(String stockName, String WKN, String stockShortcut) {
         this.stockName = stockName;
         this.WKN = WKN;
@@ -35,6 +41,7 @@ public class Stock implements Serializable {
 
     /**
      * Function used for sorting close data of one stock
+     *
      * @return sortedCloseData Returns sorted close data
      */
     public Double[] getSortedCloseData() {
@@ -102,5 +109,21 @@ public class Stock implements Serializable {
 
     public void setCourseData(ArrayList<CourseData> courseData) {
         this.courseData = courseData;
+    }
+
+    public int getNameHash() {
+        return nameHash;
+    }
+
+    public void setNameHash(int nameHash) {
+        this.nameHash = nameHash;
+    }
+
+    public int getShortcutHash() {
+        return shortcutHash;
+    }
+
+    public void setShortcutHash(int shortcutHash) {
+        this.shortcutHash = shortcutHash;
     }
 }
