@@ -70,4 +70,4 @@ fabric.properties
 *.bin
 *.csv
 *.txt
-.idea/arctifacts
+.idea/artifacts/
