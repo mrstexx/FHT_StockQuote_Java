@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="FHT_StockQuote_Java:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FHT_StockQuote_Java_jar</output-path>
+    <properties id="ant-preprocessing">
+      <options enabled="true" />
+    </properties>
+    <root id="archive" name="FHT_StockQuote_Java.jar">
+      <element id="module-output" name="FHT_StockQuote_Java" />
+    </root>
+  </artifact>
+</component>
