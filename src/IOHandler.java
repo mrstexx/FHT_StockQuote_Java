@@ -113,6 +113,7 @@ public class IOHandler {
             Double[] sortedCloseData = stock.getSortedCloseData();
 
             // writing dates and values on the graph
+
             for (int i = 0; i < stockSize; i++) {
                 for (int j = 0; j < 6 * stockSize; j++) {
                     // 6 times because 5 is date length (DD.MM) - for 5 places on x-axis + 1 for '|'
@@ -120,7 +121,7 @@ public class IOHandler {
                         fileWriter.write(formatter.format(sortedCloseData[i]) + "|");
                     } else if (j == 6 * stockSize - 1) {
                         fileWriter.write("|");
-                    } else if (j % 6 == 2 && sortedCloseData[i] == stock.getCourseData().get(j / 6).getClose()) {
+                    } else if (j % 6 == 2 && sortedCloseData[i] <= stock.getCourseData().get(j / 6).getClose()) {
                         fileWriter.write("+");
                     } else {
                         fileWriter.write(" ");
