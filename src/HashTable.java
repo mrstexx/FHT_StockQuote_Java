@@ -135,11 +135,11 @@ public class HashTable implements Serializable {
      * @return True if newly created stock is equal to existing one in database. False if newly created stock can be created
      */
     private boolean strictSearch(Stock stock) {
-        if (search(stock.getStockName(), false) != null || search(stock.getStockShortcut(), false) != null) {
+        if (search(stock.getStockName(), false) == null || search(stock.getStockShortcut(), false) == null) {
             // it is possible to create stock if name or shortcut is different than existing one in hashtable
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
